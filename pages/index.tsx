@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
 	<div>
-		<main className="text-red-500">
+		<main className="">
 		<p>Placeholder for main</p>
 		</main>
 		<footer>
