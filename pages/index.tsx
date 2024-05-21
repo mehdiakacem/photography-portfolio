@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Span } from "next/dist/trace";
+import Masonry from "react-masonry-css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,8 +24,8 @@ const tabs = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-full bg-[url('/photography-bg.jpg')] bg-top bg-cover">
-      <header className="flex justify-between items-center h-[90px] px-6">
+    <div className="h-full bg-[url('/photography-bg.jpg')] bg-top bg-cover overflow-auto">
+      <header className="fixed top-0 w-full z-10 flex justify-between items-center h-[90px] px-6">
         <div>Photography Portfolio</div>
         <Link
           href="#"
@@ -33,10 +34,10 @@ export default function Home() {
           Get in touch
         </Link>
       </header>
-      <main className="grow">
-        <div className="flex h-full flex-col items-center">
+      <main className="pt-[110px]">
+        <div className="flex flex-col items-center">
           <TabGroup>
-            <TabList className="flex items-center gap-12">
+            <TabList className="flex items-center place-content-center gap-12">
               {tabs.map((tab) => (
                 <Tab key={tab.key} className="p-2">
                   {({ selected }) => (
@@ -49,8 +50,20 @@ export default function Home() {
                 </Tab>
               ))}
             </TabList>
-            <TabPanels className="h-full bg-stone-900 bg-opacity-80 max-w-[900px] w-full p-2 sm:p-4 my-6">
-              <TabPanel>All Photos</TabPanel>
+            <TabPanels className="h-full bg-opacity-80 max-w-[900px] w-full p-2 sm:p-4 my-6">
+              <TabPanel>
+                <Masonry
+                  breakpointCols={2}
+                  className="flex gap-2"
+                  columnClassName=""
+                >
+                  <img src="/ocean-1.jpeg" alt="ocean-1" className="my-2" />
+                  <img src="/ocean-2.jpeg" alt="ocean-2" className="my-2" />
+                  <img src="/ocean-3.jpeg" alt="ocean-3" className="my-2" />
+                  <img src="/ocean-4.jpeg" alt="ocean-4" className="my-2" />
+                  <img src="/ocean-5.jpeg" alt="ocean-5" className="my-2" />
+                </Masonry>
+              </TabPanel>
               <TabPanel>Oceans</TabPanel>
               <TabPanel>Forests</TabPanel>
             </TabPanels>
