@@ -5,10 +5,8 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
-		<div className="flex-col h-full bg-[url('/photography-bg.jpg')] bg-top bg-cover">
-        	<Main />
-        	<NextScript />
-		</div>
+        <Main />
+        <NextScript />
       </body>
     </Html>
   );
