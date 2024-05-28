@@ -1,32 +1,15 @@
+import type { Photo } from "@/types";
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import Link from "next/link";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { Span } from "next/dist/trace";
-import Masonry from "react-masonry-css";
 import classNames from "classnames";
 
-import type { LightGallery } from "lightgallery/lightgallery";
-import LightGalleryComponent from "lightgallery/react";
-
-// import styles
-import "lightgallery/css/lightgallery.css";
-import "lightgallery/css/lg-zoom.css";
-import "lightgallery/css/lg-thumbnail.css";
-// import plugins if you need
-import lgThumbnail from "lightgallery/plugins/thumbnail";
-import lgZoom from "lightgallery/plugins/zoom";
-
-import ocean1 from "../public/ocean-1.jpeg";
-import ocean2 from "../public/ocean-2.jpeg";
-import ocean3 from "../public/ocean-3.jpeg";
-import ocean4 from "../public/ocean-4.jpeg";
-import ocean5 from "../public/ocean-5.jpeg";
-
 import bgImage from "../public/photography-bg.jpg";
-import { useRef } from "react";
-
-const inter = Inter({ subsets: ["latin"] });
+import { GetStaticProps } from "next";
+import { createApi } from "unsplash-js";
+import nodeFetch from "node-fetch";
+import { Gallery } from "@/components/Gallery";
+import { getImages } from "@/utils/image-utils";
 
 const tabs = [
   {
@@ -43,11 +26,31 @@ const tabs = [
   },
 ];
 
-const images = [ocean1, ocean2, ocean3, ocean4, ocean5];
+type HomeProps = {
+  oceans: Photo[];
+  forests: Photo[];
+};
 
-export default function Home() {
-  const lightboxRef = useRef<LightGallery | null>(null);
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const unsplash = createApi({
+    accessKey: process.env.UNSPLASH_ACCESS_KEY!,
+    fetch: nodeFetch as unknown as typeof fetch,
+  });
 
+  const [oceans, forests] = await Promise.all([
+    getImages(unsplash, "oceans"),
+    getImages(unsplash, "forests"),
+  ]);
+
+  return {
+    props: {
+      oceans,
+      forests,
+    },
+  };
+};
+
+export default function Home({ oceans, forests }: HomeProps) {
   return (
     <div className="h-full overflow-auto">
       <Image
@@ -90,42 +93,14 @@ export default function Home() {
             </TabList>
             <TabPanels className="h-full bg-opacity-80 max-w-[900px] w-full p-2 sm:p-4 my-6">
               <TabPanel>
-                <Masonry
-                  breakpointCols={2}
-                  className="flex gap-4"
-                  columnClassName=""
-                >
-                  {images.map((image, idx) => (
-                    <Image
-                      key={image.src}
-                      src={image}
-                      alt="placeholder"
-                      className="my-4 hover:opacity-70 cursor-pointer"
-                      placeholder="blur"
-                      onClick={() => {
-                        lightboxRef.current?.openGallery(idx);
-                      }}
-                    />
-                  ))}
-                </Masonry>
-
-                <LightGalleryComponent
-                  onInit={(ref) => {
-                    if (ref) {
-                      lightboxRef.current = ref.instance;
-                    }
-                  }}
-                  speed={500}
-                  plugins={[lgThumbnail, lgZoom]}
-                  dynamic
-                  dynamicEl={images.map((image) => ({
-                    src: image.src,
-                    thumb: image.src,
-                  }))}
-                ></LightGalleryComponent>
+                <Gallery photos={[...oceans, ...forests]} />
               </TabPanel>
-              <TabPanel>Oceans</TabPanel>
-              <TabPanel>Forests</TabPanel>
+              <TabPanel>
+                <Gallery photos={oceans} />
+              </TabPanel>
+              <TabPanel>
+                <Gallery photos={forests} />
+              </TabPanel>
             </TabPanels>
           </TabGroup>
         </div>

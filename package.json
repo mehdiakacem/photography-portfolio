@@ -11,12 +11,17 @@
   "dependencies": {
     "@headlessui/react": "^2.0.3",
     "@next/font": "^14.2.3",
+    "@types/lqip-modern": "^1.1.7",
+    "@types/node-fetch": "^2.6.11",
     "classnames": "^2.5.1",
     "lightgallery": "^2.7.2",
+    "lqip-modern": "^2.0.0",
     "next": "14.2.3",
+    "node-fetch": "^2.6.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-masonry-css": "^1.0.16"
+    "react-masonry-css": "^1.0.16",
+    "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
     "@types/node": "^20",
